@@ -5,11 +5,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,12 +28,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.main.common.bean.Page;
 import com.main.common.bean.PageBean;
 import com.main.common.bean.Result;
 import com.main.common.util.DateUtil;
 import com.main.common.util.RandomStrUtil;
+import com.main.exportFile.bean.ViewExcel;
+import com.main.exportFile.bean.XSSFViewExcel;
 import com.main.user.bean.StudentBean;
 import com.main.user.model.Student;
 import com.main.user.service.IStudentService;
@@ -44,7 +54,7 @@ public class UserController {
 	private IStudentService studentServiceImpl;
 	
 	
-	@RequestMapping(value = "/uploadimg.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/uploadimg.do", method = RequestMethod.POST)
 	@ResponseBody
 	public HttpEntity<Result> handleFormUpload(
 			MultipartFile file, Model model) {
@@ -139,7 +149,7 @@ public class UserController {
 	
 	@RequestMapping("/listUser.do")
 	public String listUser(StudentBean queryBean,PageBean pageBean,ModelMap map){
-		Page<Student> page = studentServiceImpl.findStudents(queryBean,pageBean);
+		Page<Student> page = studentServiceImpl.findPageStudents(queryBean,pageBean);
 		map.put("page", page);
 		map.put("pageBean", page.getPageBean());
 		map.put("queryBean", queryBean);
@@ -166,4 +176,28 @@ public class UserController {
 		studentServiceImpl.updateStudent(student);
 		return "redirect:/user/listUser.do";
 	}
+	
+	 /**
+	    * 导出Excel
+	    * @param model
+	    * @param projectId
+	    * @param request
+	    * @return
+	    */
+	   @RequestMapping(value="/exportExcel.do",method=RequestMethod.POST)
+	   @ResponseBody
+		public ModelAndView toDcExcel(StudentBean queryBean,ModelMap model, HttpServletRequest request,HttpServletResponse response){
+		   List<Student> students = studentServiceImpl.findStudents(queryBean);
+		   Map<String, Object> datas = new HashMap<String, Object>();  
+		   datas.put("students", students);
+		   //获取数据库表生成的workbook    
+	       HSSFWorkbook workbook = new HSSFWorkbook(); 
+	       XSSFViewExcel viewExcel = new XSSFViewExcel(); 
+	       try {
+			viewExcel.buildExcelDocument(datas, workbook, request, response);
+		   } catch (IOException e1) {
+			e1.printStackTrace();
+		   }
+	       return new ModelAndView(viewExcel, model); 
+	   }
 }

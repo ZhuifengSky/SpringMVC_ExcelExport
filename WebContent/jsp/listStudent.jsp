@@ -42,14 +42,14 @@
 		}
 	}
 	function exportExcel(){
-		var url = "./opExcel/exportExcel.do";
+		var url = "user/exportExcel.do";
 		 $.ajax({
 	            //提交数据的类型 POST GET
 	            type:"POST",
 	            //提交的网址
 	            url:url,
 	            //提交的数据
-	            data:{Name:"sanmao",Password:"sanmaoword"},
+	            data:{queryBean:"queryBean"},
 	            //返回数据的格式
 	            datatype: "json",//"xml", "html", "script", "json", "jsonp", "text".
 	            //在请求之前调用的函数
@@ -77,18 +77,28 @@
 	}
 
 	function test(){
-		window.location = "./opExcel/exportExcel.do";
+		window.location = "./user/exportExcel.do";
+	}
+	 function outputExcel() {
+		 var queryForm = document.getElementById("queryForm");
+		 queryForm.action="user/exportExcel.do";
+		 queryForm.submit();			
+		 queryForm.action="user/listUser.do";
+	 } 
+	function test2(){
+		window.location = "./opExcel/exportPdf.do";
 	}
 	
 </script>
 </head>
 
 <body>
-	<form action="user/listUser.do" method="post">
+	<form action="user/listUser.do" method="post" id="queryForm">
 		姓名：<input type="text" name="studentName"
 			value="${queryBean.studentName}">
 			<input type="submit" value="查找">
-			<input type="button" value="导出Excel" onclick="test()">
+			<input type="button" value="导出Excel" onclick="outputExcel()">
+			<input type="button" value="导出PDF" onclick="test2()">
 		<hr>
 	</form>
 		<table border="1px">

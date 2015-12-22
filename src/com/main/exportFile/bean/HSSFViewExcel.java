@@ -9,26 +9,28 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import com.main.user.model.Student;
 
-public class ViewExcel extends AbstractExcelView {
+public class HSSFViewExcel extends AbstractExcelView {
 
 	@Override
 	public void buildExcelDocument(Map<String, Object> datas,
 			HSSFWorkbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws IOException{
-		Sheet sheet = workbook.createSheet("学员信息");
+		HSSFSheet sheet = workbook.createSheet("学员信息");
 		//Excel样式
 		Map<String, CellStyle> styles = createStyles(workbook);  
 		//创建合并区域
@@ -36,11 +38,11 @@ public class ViewExcel extends AbstractExcelView {
         //在sheet里增加合并单元格  
         sheet.addMergedRegion(rangeAddress); 
         //设置宽度
-        sheet.setColumnWidth(3, 200);
+        sheet.setColumnWidth(3, 256*40);
         //创建标题行
-        Row rowTitle = sheet.createRow(0);
+        HSSFRow rowTitle = sheet.createRow(0);
         //为标题行创建一个单元格
-        Cell titleCell = rowTitle.createCell(0);
+        HSSFCell titleCell = rowTitle.createCell(0);
         titleCell.setCellValue("学员列表");
         //设置单元格样式
         titleCell.setCellStyle(styles.get("title"));  
@@ -60,6 +62,7 @@ public class ViewExcel extends AbstractExcelView {
 		Cell headerCell4 = rowHeader.createCell(3);
 		headerCell4.setCellValue("头像Url");
 		//获取数据并填充Excel
+		@SuppressWarnings("unchecked")
 		List<Student> students = (List<Student>) datas.get("students");
         if (students!=null && students.size()>0) {
         	for (int i = 0; i < students.size(); i++) {

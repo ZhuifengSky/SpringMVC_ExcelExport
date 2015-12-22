@@ -37,7 +37,7 @@ public class StudentDaoImpl implements IStudentDao{
 	}
 
 	@Override
-	public Page<Student> findStudents(StudentBean queryBean,PageBean pageBean) {
+	public Page<Student> findPageStudents(StudentBean queryBean,PageBean pageBean) {
 		StringBuffer hql = new StringBuffer(" from Student  where 1 = 1");
 		Page<Student> page = new Page<Student>();;
 		Session session = sessionFactory.getCurrentSession();
@@ -85,6 +85,7 @@ public class StudentDaoImpl implements IStudentDao{
 		Student saveStudent = (Student) session.get(Student.class, student.getId());
 		saveStudent.setAge(student.getAge());
 		saveStudent.setStudentName(student.getStudentName());
+		saveStudent.setImageUrl(student.getImageUrl());
 		session.update(saveStudent);
 		session.flush();
 	}
@@ -96,5 +97,19 @@ public class StudentDaoImpl implements IStudentDao{
 		List d = query.list();		
 		session.close();
 		return Integer.parseInt(d.get(0).toString()) ;
+	}
+
+	@Override
+	public List<Student> findStudents(StudentBean queryBean) {
+		StringBuffer hql = new StringBuffer(" from Student  where 1 = 1");
+		Session session = sessionFactory.getCurrentSession();
+		if (queryBean!=null) {
+			if (queryBean.getStudentName()!=null && !"".equals(queryBean.getStudentName())) {
+				hql.append(" and studentName like '%"+queryBean.getStudentName()+"%'");
+			}
+		}		
+		Query query = session.createQuery(hql.toString());
+		List<Student> students = query.list();
+		return students;
 	}
 }

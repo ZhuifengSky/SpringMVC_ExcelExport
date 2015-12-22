@@ -67,8 +67,8 @@
 
 	}
 	function uploadCallback(data, id) {
-		document.getElementById(id).value = data.path;
-		var url = data.path;
+		document.getElementById(id).value = data.message;
+		var url = data.message;
 		//$("#androidImageUrl_show").hide();
 		$('#' + id + '_file')
 				.after(
@@ -108,7 +108,7 @@
 					value="${s.studentName}"><c:if test="${s.id ne null}">
 						<input type="hidden" value="${s.id}" name="id">
 					</c:if>
-					<input type="hidden" value="${s.imageUrl}" name="imageUrl">
+					<input type="text" value="${s.imageUrl}" name="imageUrl" id="imageUrl">
 					</td>
 			</tr>
 			<tr>

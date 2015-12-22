@@ -22,7 +22,7 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import com.main.user.model.Student;
 
-public class ViewExcel extends AbstractExcelView {
+public class XSSFViewExcel extends AbstractExcelView {
 
 	@Override
 	public void buildExcelDocument(Map<String, Object> datas,
@@ -36,7 +36,7 @@ public class ViewExcel extends AbstractExcelView {
         //在sheet里增加合并单元格  
         sheet.addMergedRegion(rangeAddress); 
         //设置宽度
-        sheet.setColumnWidth(3, 200);
+        sheet.setColumnWidth(3, 256*40);
         //创建标题行
         Row rowTitle = sheet.createRow(0);
         //为标题行创建一个单元格
@@ -60,6 +60,7 @@ public class ViewExcel extends AbstractExcelView {
 		Cell headerCell4 = rowHeader.createCell(3);
 		headerCell4.setCellValue("头像Url");
 		//获取数据并填充Excel
+		@SuppressWarnings("unchecked")
 		List<Student> students = (List<Student>) datas.get("students");
         if (students!=null && students.size()>0) {
         	for (int i = 0; i < students.size(); i++) {

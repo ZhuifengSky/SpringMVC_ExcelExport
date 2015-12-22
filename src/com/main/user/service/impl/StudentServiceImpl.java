@@ -25,8 +25,8 @@ public class StudentServiceImpl implements IStudentService{
 		return studentDao.addStudent(student);
 	}
 	@Override
-	public Page<Student> findStudents(StudentBean queryBean,PageBean pageBean) {
-		return studentDao.findStudents(queryBean,pageBean);
+	public Page<Student> findPageStudents(StudentBean queryBean,PageBean pageBean) {
+		return studentDao.findPageStudents(queryBean,pageBean);
 	}
 	@Override
 	public Student queryStident(String sid) {
@@ -43,6 +43,10 @@ public class StudentServiceImpl implements IStudentService{
 	public void updateStudent(Student student) {
 		studentDao.updateStudent(student);
 		
+	}
+	@Override
+	public List<Student> findStudents(StudentBean queryBean) {
+		return studentDao.findStudents(queryBean);
 	}
 
 }

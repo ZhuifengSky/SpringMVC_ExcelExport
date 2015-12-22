@@ -23,7 +23,7 @@ public interface IStudentDao {
 	 * @param queryBean
 	 * @return
 	 */
-	public Page<Student> findStudents(StudentBean queryBean,PageBean pageBean);
+	public Page<Student> findPageStudents(StudentBean queryBean,PageBean pageBean);
 
 	/**
 	 * 学生详情查看
@@ -45,4 +45,12 @@ public interface IStudentDao {
 	 * @param student
 	 */
 	public void updateStudent(Student student);
+	
+	/**
+	 * 学生条件查询(不分页)
+	 * 
+	 * @param queryBean
+	 * @return
+	 */
+	public List<Student> findStudents(StudentBean queryBean);
 }
