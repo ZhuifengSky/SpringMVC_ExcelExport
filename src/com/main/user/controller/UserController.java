@@ -30,12 +30,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfWriter;
 import com.main.common.bean.Page;
 import com.main.common.bean.PageBean;
 import com.main.common.bean.Result;
 import com.main.common.util.DateUtil;
 import com.main.common.util.RandomStrUtil;
 import com.main.exportFile.bean.ViewExcel;
+import com.main.exportFile.bean.ViewPDF;
 import com.main.exportFile.bean.XSSFViewExcel;
 import com.main.user.bean.StudentBean;
 import com.main.user.model.Student;
@@ -199,5 +202,32 @@ public class UserController {
 			e1.printStackTrace();
 		   }
 	       return new ModelAndView(viewExcel, model); 
+	   }
+	   
+	   /* µ¼³öExcel
+	    * @param model
+	    * @param projectId
+	    * @param request
+	    * @return
+	    */
+	   @RequestMapping(value="/exportPdf.do",method=RequestMethod.POST)
+	   @ResponseBody
+		public ModelAndView toDcPdf(StudentBean queryBean,ModelMap model, HttpServletRequest request,HttpServletResponse response){
+		   List<Student> students = studentServiceImpl.findStudents(queryBean);
+		   Map<String, Object> datas = new HashMap<String, Object>();   
+		   datas.put("students", students);
+	       ViewPDF viewPdf = new ViewPDF();
+	       Document document = null;
+	       PdfWriter writer = null;
+	       try {  
+	    	   document = new Document();
+	    	   writer = PdfWriter.getInstance(document,response.getOutputStream());
+	    	   viewPdf.buildPdfDocument(datas, document , writer, request, response);
+	       } catch (Exception e) {    
+	    	   e.printStackTrace();  
+	       } finally{
+	    	   writer.close();	    	  
+	       } 
+	       return new ModelAndView(viewPdf, model); 
 	   }
 }

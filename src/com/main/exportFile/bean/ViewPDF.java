@@ -24,20 +24,22 @@ public class ViewPDF extends AbstractPdfView{
 		    String excelName = "用户信息.pdf";  
 	        // 设置response方式,使执行此controller时候自动出现下载页面,而非直接使用excel打开  
 	        response.setContentType("APPLICATION/OCTET-STREAM");  
-	        response.setHeader("Content-Disposition", "attachment; filename="+ URLEncoder.encode(excelName, "UTF-8"));    
-	          
+	        response.setHeader("Content-Disposition", "attachment; filename="+ URLEncoder.encode(excelName, "UTF-8"));    	          
 	        @SuppressWarnings("unchecked")
-			List<Student> stuList = (List<Student>) model.get("list");            
+			List<Student> students = (List<Student>) model.get("students");            
 	        //显示中文  
 	        BaseFont bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);   
 	        com.lowagie.text.Font FontChinese = new com.lowagie.text.Font(bfChinese, 12, com.lowagie.text.Font.NORMAL );          
 	        document.open();
-	        String value = null;  
-	        for (int i = 0; i < stuList.size(); i++) {    
-	            Student s = (Student)stuList.get(i);  
-	            value = "编号: "+ s.getId()+"姓名: "+ s.getStudentName()+",年龄: "+s.getAge();  
-	            document.add(new Paragraph(value,FontChinese));     
-	        }
+	        String value = null;
+	        document.add(new Paragraph("学员信息",FontChinese)); 
+	        if (students!=null && students.size()>0) {
+	        	 for (int i = 0; i < students.size(); i++) {    
+	 	            Student s = (Student)students.get(i);  
+	 	            value = "学员ID: "+ s.getId()+"姓名: "+ s.getStudentName()+"年龄: "+s.getAge()+"头像Url: "+s.getImageUrl();  
+	 	            document.add(new Paragraph(value,FontChinese));     
+	 	        }
+			}	       
 	        document.close(); 
 		
 	}

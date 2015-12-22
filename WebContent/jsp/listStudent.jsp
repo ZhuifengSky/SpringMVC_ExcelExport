@@ -75,19 +75,18 @@
 	            }         
 	         });
 	}
-
-	function test(){
-		window.location = "./user/exportExcel.do";
-	}
 	 function outputExcel() {
 		 var queryForm = document.getElementById("queryForm");
 		 queryForm.action="user/exportExcel.do";
 		 queryForm.submit();			
 		 queryForm.action="user/listUser.do";
+	 }
+	 function outputPDF() {
+		 var queryForm = document.getElementById("queryForm");
+		 queryForm.action="user/exportPdf.do";
+		 queryForm.submit();			
+		 queryForm.action="user/listUser.do";
 	 } 
-	function test2(){
-		window.location = "./opExcel/exportPdf.do";
-	}
 	
 </script>
 </head>
@@ -98,7 +97,7 @@
 			value="${queryBean.studentName}">
 			<input type="submit" value="查找">
 			<input type="button" value="导出Excel" onclick="outputExcel()">
-			<input type="button" value="导出PDF" onclick="test2()">
+			<input type="button" value="导出PDF" onclick="outputPDF()">
 		<hr>
 	</form>
 		<table border="1px">
